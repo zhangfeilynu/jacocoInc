@@ -58,7 +58,9 @@ java -jar F:\jacoco-0.8.5.20200630074\lib\jacococli.jar report zdh.exec --gitNam
 ```
 
 4. 参数说明
-以下是新增的参数说明
+- classfiles，编译后的class目录
+- sourcefiles，源文件目录，理论可以不传,不传的话 只能到文件级的展示,再细 需要具体代码和行数就需要这个了
+**以下是新增的参数说明**
 - type，分析类型，1全量，2基于分支增量，3基于tag增量，不传默认等于3
 - gitDir，git本地目录，只有type=2或者3时需要此参数，不传默认当前目录
 - gitName，git用户名，只有type=2或者3时需要此参数

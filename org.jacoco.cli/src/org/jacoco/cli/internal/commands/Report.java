@@ -27,6 +27,7 @@ import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.internal.diff.GitAdapter;
 import org.jacoco.core.tools.ExecFileLoader;
 import org.jacoco.report.DirectorySourceFileLocator;
 import org.jacoco.report.FileMultiReportOutput;
@@ -61,7 +62,7 @@ public class Report extends Command {
 	String name = "JaCoCo Coverage Report";
 
 	@Option(name = "--encoding", usage = "source file encoding (by default platform encoding is used)", metaVar = "<charset>")
-	String encoding;
+	String encoding="UTF-8";
 
 	@Option(name = "--xml", usage = "output file for the XML report", metaVar = "<file>")
 	File xml;
@@ -72,6 +73,27 @@ public class Report extends Command {
 	@Option(name = "--html", usage = "output directory for the HTML report", metaVar = "<dir>")
 	File html;
 
+	@Option(name = "--type", usage = "分析类型，1全量2分支3tag", metaVar = "<n>")
+	int type=3;
+
+	@Option(name = "--gitDir", usage = "本地git目录", metaVar = "<dir>")
+	String gitDir=".";
+
+	@Option(name = "--branchName", usage = "分支名称，tag增量时使用该参数，默认master", metaVar = "<branchName>")
+	String branchName="master";
+
+	@Option(name = "--newTag", usage = "新tag(预发版本)，tag增量时使用该参数", metaVar = "<newTag>")
+	String newTag="";
+
+	@Option(name = "--oldTag", usage = "基线tag(变更前的版本)，tag增量时使用该参数", metaVar = "<oldTag>")
+	String oldTag="";
+
+	@Option(name = "--newBranchName", usage = "开发分支名称（预发分支），分支增量时使用该参数", metaVar = "<newBranchName>")
+	String newBranchName="";
+
+	@Option(name = "--oldBranchName", usage = "基线分支名称，分支增量时使用该参数，默认", metaVar = "<oldBranchName>")
+	String oldBranchName="master";
+
 	@Override
 	public String description() {
 		return "Generate reports in different formats by reading exec and Java class files.";
@@ -81,9 +103,19 @@ public class Report extends Command {
 	public int execute(final PrintWriter out, final PrintWriter err)
 			throws IOException {
 		final ExecFileLoader loader = loadExecutionData(out);
-		final IBundleCoverage bundle = analyze(loader.getExecutionDataStore(),
-				out);
-		writeReports(bundle, loader, out);
+		if(type==1){
+			final IBundleCoverage bundle = analyze1(loader.getExecutionDataStore(),
+					out);
+			writeReports(bundle, loader, out);
+		}else if(type==2){
+			final IBundleCoverage bundle = analyze2(loader.getExecutionDataStore(),
+					out);
+			writeReports(bundle, loader, out);
+		}else{
+			final IBundleCoverage bundle = analyze3(loader.getExecutionDataStore(),
+					out);
+			writeReports(bundle, loader, out);
+		}
 		return 0;
 	}
 
@@ -102,8 +134,32 @@ public class Report extends Command {
 		return loader;
 	}
 
-	private IBundleCoverage analyze(final ExecutionDataStore data,
+	private IBundleCoverage analyze3(final ExecutionDataStore data,
 			final PrintWriter out) throws IOException {
+		GitAdapter.setCredentialsProvider("zhangfeilynu@163.com", "Yozo888001");
+		final CoverageBuilder builder = new CoverageBuilder(gitDir,branchName,newTag,oldTag);
+		final Analyzer analyzer = new Analyzer(data, builder);
+		for (final File f : classfiles) {
+			analyzer.analyzeAll(f);
+		}
+		printNoMatchWarning(builder.getNoMatchClasses(), out);
+		return builder.getBundle(name);
+	}
+
+	private IBundleCoverage analyze2(final ExecutionDataStore data,
+									 final PrintWriter out) throws IOException {
+		GitAdapter.setCredentialsProvider("zhangfeilynu@163.com", "Yozo888001");
+		final CoverageBuilder builder = new CoverageBuilder(gitDir,newBranchName,oldBranchName);
+		final Analyzer analyzer = new Analyzer(data, builder);
+		for (final File f : classfiles) {
+			analyzer.analyzeAll(f);
+		}
+		printNoMatchWarning(builder.getNoMatchClasses(), out);
+		return builder.getBundle(name);
+	}
+
+	private IBundleCoverage analyze1(final ExecutionDataStore data,
+									 final PrintWriter out) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(data, builder);
 		for (final File f : classfiles) {

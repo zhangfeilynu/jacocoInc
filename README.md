@@ -50,7 +50,7 @@ java -jar F:\jacoco-0.8.5.20200630074\lib\jacococli.jar report zdh.exec --type 1
 
 2. 基于分支的增量报告
 ```
-java -jar F:\jacoco-0.8.5.20200630074\lib\jacococli.jar report zdh.exec --gitName zhangfei --gitPassword 123456 --gitDir E:\workspace\zdh --type 2 --newBranchName dev1 --oldBranchName dev2 --classfiles E:\workspace\zdh\target\classes\com  --sourcefiles E:\workspace\zdh\src\main\java --html report --xml report.xml
+java -jar F:\jacoco-0.8.5.20200630074\lib\jacococli.jar report zdh.exec --type 2 --gitName zhangfei --gitPassword 123456 --gitDir E:\workspace\zdh --newBranchName dev1 --oldBranchName dev2 --classfiles E:\workspace\zdh\target\classes\com  --sourcefiles E:\workspace\zdh\src\main\java --html report --xml report.xml
 ```
 3. 基于tag的增量报告
 ```

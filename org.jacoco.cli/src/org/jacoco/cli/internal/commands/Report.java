@@ -79,6 +79,12 @@ public class Report extends Command {
 	@Option(name = "--gitDir", usage = "本地git目录", metaVar = "<dir>")
 	String gitDir=".";
 
+	@Option(name = "--gitName", usage = "git用户名", metaVar = "<gitName>")
+	String gitName="";
+
+	@Option(name = "--gitPassword", usage = "git密码", metaVar = "<gitPassword>")
+	String gitPassword="";
+
 	@Option(name = "--branchName", usage = "分支名称，tag增量时使用该参数，默认master", metaVar = "<branchName>")
 	String branchName="master";
 
@@ -136,7 +142,7 @@ public class Report extends Command {
 
 	private IBundleCoverage analyze3(final ExecutionDataStore data,
 			final PrintWriter out) throws IOException {
-		GitAdapter.setCredentialsProvider("zhangfeilynu@163.com", "Yozo888001");
+		GitAdapter.setCredentialsProvider(gitName, gitPassword);
 		final CoverageBuilder builder = new CoverageBuilder(gitDir,branchName,newTag,oldTag);
 		final Analyzer analyzer = new Analyzer(data, builder);
 		for (final File f : classfiles) {
@@ -148,7 +154,7 @@ public class Report extends Command {
 
 	private IBundleCoverage analyze2(final ExecutionDataStore data,
 									 final PrintWriter out) throws IOException {
-		GitAdapter.setCredentialsProvider("zhangfeilynu@163.com", "Yozo888001");
+		GitAdapter.setCredentialsProvider(gitName, gitPassword);
 		final CoverageBuilder builder = new CoverageBuilder(gitDir,newBranchName,oldBranchName);
 		final Analyzer analyzer = new Analyzer(data, builder);
 		for (final File f : classfiles) {

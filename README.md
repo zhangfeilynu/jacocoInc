@@ -20,7 +20,7 @@ Note: We do not answer general questions in the project's issue tracker. Please 
 2. 进入jacoco\target目录，解压刚打的包jacoco-0.8.5.202006300741.zip
 3. 使用压缩软件打开jacocoagent.jar，删除META-INF目录下*.SF,*.DSA,*.RSA文件
 4. 使用压缩软件打开jacococli.jar，删除META-INF目录下*.SF,*.DSA,*.RSA文件
-5. 使用压缩文件打开jacococli.jar，删除com\jcraft\jsch
+5. 使用压缩文件打开jacococli.jar，删除com\jcraft\jsch（只删除jsch目录）
 6. 使用压缩文件打开jsch-0.1.55.jar，将其中\com\jcraft\jsch拷贝到jacococli.jar\com\jcraft\目录下
 # 二、使用方式
 支持3种方式，分别是全量覆盖、基于分支的增量覆盖、基于tag的增量覆盖

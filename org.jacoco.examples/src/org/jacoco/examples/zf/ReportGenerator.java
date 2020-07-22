@@ -28,6 +28,7 @@ import org.jacoco.report.MultiSourceFileLocator;
 import org.jacoco.report.html.HTMLFormatter;
 
 
+
 /**
  * This example creates a HTML report for eclipse like projects based on a
  * single execution data store called jacoco.exec. The report contains no
